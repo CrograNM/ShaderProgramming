@@ -20,7 +20,7 @@ void Sin1() {
 }
 
 void Sin2() {
-	float t = u_Time * 2 - 1;
+	float t = mod(u_Time, 1.0f) * 2 - 1;
 
 	vec4 newPosition;
 	newPosition.x = a_Position.x + t;
@@ -31,7 +31,17 @@ void Sin2() {
 	gl_Position = newPosition;
 }
 
+void Circle1() {
+	float t = u_Time * 1;
+	vec4 newPosition;
+	newPosition.x = a_Position.x + cos(2.0 * 3.141592 * t);		// 1주기, 반지름 1
+	newPosition.y = a_Position.y + sin(2.0 * 3.141592 * t);		// 1주기, 반지름 1
+	newPosition.z = 0;
+	newPosition.w = 1;
+	gl_Position = newPosition;
+}
+
 void main()
 {
-	Sin2();
+	Circle1();
 }
