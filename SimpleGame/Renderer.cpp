@@ -210,7 +210,7 @@ float g_Time = 0;
 
 void Renderer::DrawTriangle()
 {
-	g_Time += 0.00001f; // 테스트용
+	g_Time += 0.0001f; // 테스트용
 
 	//Program select
 	glUseProgram(m_TriangleShader);
