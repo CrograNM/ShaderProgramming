@@ -209,6 +209,10 @@ void Renderer::DrawTriangle()
 	//Program select
 	glUseProgram(m_TriangleShader);
 
+	int u_Time = glGetUniformLocation(
+		m_TriangleShader, "u_Time");
+	glUniform1f(u_Time, 0.f);
+
 	int attribPosition = glGetAttribLocation(
 		m_TriangleShader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);
