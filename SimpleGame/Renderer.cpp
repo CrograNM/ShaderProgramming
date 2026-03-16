@@ -204,14 +204,20 @@ void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, flo
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
+float g_Time = 0;
+
+
 void Renderer::DrawTriangle()
 {
+	g_Time += 0.00001f; // 테스트용
+
 	//Program select
 	glUseProgram(m_TriangleShader);
 
 	int u_Time = glGetUniformLocation(
 		m_TriangleShader, "u_Time");
-	glUniform1f(u_Time, 0.f);
+	glUniform1f(u_Time, g_Time);
 
 	int attribPosition = glGetAttribLocation(
 		m_TriangleShader, "a_Position");
