@@ -78,5 +78,5 @@ void InfinityMove() {
 
 void main()
 {
-	StarMove();
+	InfinityMove();
 }
