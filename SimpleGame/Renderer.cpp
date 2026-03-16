@@ -55,13 +55,13 @@ void Renderer::CreateVertexBufferObjects()
 	float triangle []
 		=
 	{
-		centerX,		centerY,		0,
-		centerX + size, centerY,		0,
-		centerX + size, centerY + size, 0,	// Triangle1	
+		centerX - size/2, centerY - size/2,		0,
+		centerX + size/2, centerY - size/2,		0,
+		centerX + size/2, centerY + size/2,		0,	// Triangle1	
 
-		centerX,		centerY,		0,
-		centerX + size, centerY + size, 0,
-		centerX,		centerY + size, 0		// Triangle2
+		centerX - size/2, centerY - size/2, 	0,
+		centerX - size/2, centerY + size/2,		0,
+		centerX + size/2, centerY + size/2,		0	// Triangle2
 	};
 	glGenBuffers(1, &m_VBOTriangle);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTriangle);
