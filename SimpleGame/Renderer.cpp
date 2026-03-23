@@ -22,12 +22,13 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	//Load shaders
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
-	m_TriangleShader = CompileShaders("./Shaders/Triangle.vs", "./Shaders/Triangle.fs");
+	// m_TriangleShader = CompileShaders("./Shaders/Triangle.vs", "./Shaders/Triangle.fs");
+	m_ParticleShader = CompileShaders("./Shaders/Triangle.vs", "./Shaders/Triangle.fs");
 
 	//Create VBOs
 	CreateVertexBufferObjects();
 
-	GenParticle(5000);
+	GenParticle(1000);
 	
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
 	{
@@ -63,7 +64,7 @@ void Renderer::CreateVertexBufferObjects()
 	float vy = 1;
 	float rv = 1;
 	
-	float triangle []
+	float particle []
 		=
 	{
 		centerX - size/2, centerY - size/2,		0,
@@ -80,9 +81,9 @@ void Renderer::CreateVertexBufferObjects()
 		centerX + size/2, centerY + size/2,		0,	// Triangle2
 		mass, vx, vy, rv	// v5
 	};
-	glGenBuffers(1, &m_VBOTriangle);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTriangle);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+	glGenBuffers(1, &m_VBOParticle);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOParticle);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(particle), particle, GL_STATIC_DRAW);
 
 	// 동기 : 버퍼 데이터가 GPU로 전송되고 나서 리턴
 	// 비동기 : 바로 리턴
@@ -224,30 +225,30 @@ void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, flo
 
 float g_Time = 0;
 
-void Renderer::DrawTriangle()
+void Renderer::DrawParticle()
 {
 	g_Time += 0.0001f; // 테스트용
 
 	//Program select
-	glUseProgram(m_TriangleShader);
+	glUseProgram(m_ParticleShader);
 
 	int u_Time = glGetUniformLocation(
-		m_TriangleShader, "u_Time");
+		m_ParticleShader, "u_Time");
 	glUniform1f(u_Time, g_Time);
 
 	// Attribute
-	int attribPosition = glGetAttribLocation(m_TriangleShader, "a_Position");
-	int attribMass = glGetAttribLocation(m_TriangleShader, "a_Mass");
-	int attribVel = glGetAttribLocation(m_TriangleShader, "a_Vel");
-	int attribRv = glGetAttribLocation(m_TriangleShader, "a_RV");
+	int attribPosition = glGetAttribLocation(m_ParticleShader, "a_Position");
+	int attribMass = glGetAttribLocation(m_ParticleShader, "a_Mass");
+	int attribVel = glGetAttribLocation(m_ParticleShader, "a_Vel");		// 속도
+	int attribRv = glGetAttribLocation(m_ParticleShader, "a_RV");			// Random Value
 	glEnableVertexAttribArray(attribPosition);
 	glEnableVertexAttribArray(attribMass);
 	glEnableVertexAttribArray(attribVel);
 	glEnableVertexAttribArray(attribRv);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTriangle);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOParticle);
 	
-	// Stride : 7 * sizeof(float) 정점 데이터 크기 (x, y, z, mass, vx, vy, rv)
+	// Stride : 7 * sizeof(float) 정점 데이터 크기 (x, y, z, mass, vx, vy, RV)
 	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), 0);
 	glVertexAttribPointer(attribMass, 1, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
 	glVertexAttribPointer(attribVel, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (GLvoid*)(4 * sizeof(float)));
@@ -272,7 +273,7 @@ void Renderer::GenParticle(int num)
 	m_ParticleCount = num;
 	srand((unsigned int)time(NULL)); 
 
-	std::vector<float> vertices;
+	std::vector<float> particles;
 	float size = 0.02f; 
 	float mass = 1.0f;
 
@@ -281,7 +282,7 @@ void Renderer::GenParticle(int num)
 		float vx = ((float)rand() / RAND_MAX) * 3.0f - 1.5f;
 		float vy = ((float)rand() / RAND_MAX) * 2.0f + 1.0f;
 
-		float rv = (float)rand() / RAND_MAX;
+		float rv = (float)rand() / RAND_MAX; // 랜덤 값 (0.0 ~ 1.0)
 
 		float centerX = 0.0f;
 		float centerY = 0.0f;
@@ -297,14 +298,14 @@ void Renderer::GenParticle(int num)
 		};
 
 		for (int j = 0; j < 42; j++) { 
-			vertices.push_back(p[j]);
+			particles.push_back(p[j]);
 		}
 	}
 
 	// VBO                    
-	if (m_VBOTriangle == 0) {
-		glGenBuffers(1, &m_VBOTriangle);
+	if (m_VBOParticle == 0) {
+		glGenBuffers(1, &m_VBOParticle);
 	}
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTriangle);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOParticle);
+	glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof(float), particles.data(), GL_STATIC_DRAW);
 }
