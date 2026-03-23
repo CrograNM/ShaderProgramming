@@ -241,18 +241,21 @@ void Renderer::DrawParticle()
 	int attribMass = glGetAttribLocation(m_ParticleShader, "a_Mass");
 	int attribVel = glGetAttribLocation(m_ParticleShader, "a_Vel");		// 속도
 	int attribRv = glGetAttribLocation(m_ParticleShader, "a_RV");			// Random Value
+	int attribRv2 = glGetAttribLocation(m_ParticleShader, "a_RV2");		// Random Value 2
 	glEnableVertexAttribArray(attribPosition);
 	glEnableVertexAttribArray(attribMass);
 	glEnableVertexAttribArray(attribVel);
 	glEnableVertexAttribArray(attribRv);
+	glEnableVertexAttribArray(attribRv2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOParticle);
 	
 	// Stride : 7 * sizeof(float) 정점 데이터 크기 (x, y, z, mass, vx, vy, RV)
-	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), 0);
-	glVertexAttribPointer(attribMass, 1, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
-	glVertexAttribPointer(attribVel, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (GLvoid*)(4 * sizeof(float)));
-	glVertexAttribPointer(attribRv, 1, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (GLvoid*)(6 * sizeof(float)));
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
+	glVertexAttribPointer(attribMass, 1, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+	glVertexAttribPointer(attribVel, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (GLvoid*)(4 * sizeof(float)));
+	glVertexAttribPointer(attribRv, 1, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (GLvoid*)(6 * sizeof(float)));
+	glVertexAttribPointer(attribRv2, 1, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (GLvoid*)(7 * sizeof(float)));
 
 	glDrawArrays(GL_TRIANGLES, 0, m_ParticleCount * 6);
 	
@@ -260,6 +263,7 @@ void Renderer::DrawParticle()
 	glDisableVertexAttribArray(attribMass);
 	glDisableVertexAttribArray(attribVel);
 	glDisableVertexAttribArray(attribRv);
+	glDisableVertexAttribArray(attribRv2);
 }
 
 void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
@@ -279,25 +283,26 @@ void Renderer::GenParticle(int num)
 
 	for (int i = 0; i < num; i++)
 	{
-		float vx = ((float)rand() / RAND_MAX) * 3.0f - 1.5f;
-		float vy = ((float)rand() / RAND_MAX) * 2.0f + 1.0f;
+		float vx = 0;
+		float vy = ((float)rand() / RAND_MAX);
 
 		float rv = (float)rand() / RAND_MAX; // 랜덤 값 (0.0 ~ 1.0)
+		float rv2 = (float)rand() / RAND_MAX; // 랜덤 값 (0.0 ~ 1.0)
 
 		float centerX = 0.0f;
 		float centerY = 0.0f;
 
 		float p[] = {
-			centerX - size / 2, centerY - size / 2, 0, mass, vx, vy, rv,
-			centerX + size / 2, centerY - size / 2, 0, mass, vx, vy, rv,
-			centerX + size / 2, centerY + size / 2, 0, mass, vx, vy, rv,
+			centerX - size / 2, centerY - size / 2, 0, mass, vx, vy, rv, rv2,
+			centerX + size / 2, centerY - size / 2, 0, mass, vx, vy, rv, rv2,
+			centerX + size / 2, centerY + size / 2, 0, mass, vx, vy, rv, rv2,
 
-			centerX - size / 2, centerY - size / 2, 0, mass, vx, vy, rv,
-			centerX + size / 2, centerY + size / 2, 0, mass, vx, vy, rv,
-			centerX - size / 2, centerY + size / 2, 0, mass, vx, vy, rv
+			centerX - size / 2, centerY - size / 2, 0, mass, vx, vy, rv, rv2,
+			centerX + size / 2, centerY + size / 2, 0, mass, vx, vy, rv, rv2,
+			centerX - size / 2, centerY + size / 2, 0, mass, vx, vy, rv, rv2
 		};
 
-		for (int j = 0; j < 42; j++) { 
+		for (int j = 0; j < 48; j++) { 
 			particles.push_back(p[j]);
 		}
 	}

@@ -6,6 +6,7 @@ in vec3 a_Position;
 in float a_Mass;
 in vec2 a_Vel;
 in float a_RV;
+in float a_RV2;
 
 const float c_PI = 3.141592;
 const vec2 c_G = vec2(0, -9.8);
@@ -103,20 +104,27 @@ void Rose()
 
 void Falling()
 {
-    float t = mod(u_Time, 1.0);
-    float tt = t*t;
-    float vx = a_Vel.x;
-    float vy = a_Vel.y;
-    // 초기 위치를 원의 둘레 상으로만
-    float initPosX = ( a_Position.x + sin(a_RV * 2 * c_PI) );
-    float initPosY = ( a_Position.y + cos(a_RV * 2 * c_PI) );
-    vec4 newPos;
-    newPos.x = initPosX + vx * t + 0.5 * c_G.x * tt;
-    newPos.y = initPosY + vy * t + 0.5 * c_G.y * tt;
-    newPos.z = 0;
-    newPos.w = 1;
-
-    gl_Position = newPos;
+    float startTime = a_RV2;
+    float newTime = u_Time - startTime;
+    
+    if (newTime > 0) {
+        float t = mod(newTime, 1.0);
+        float tt = t*t;
+        float vx = a_Vel.x;
+        float vy = a_Vel.y;
+        // 초기 위치를 원의 둘레 상으로만
+        float initPosX = a_Position.x + sin(a_RV * 2 * c_PI);
+        float initPosY = a_Position.y + cos(a_RV * 2 * c_PI);
+        vec4 newPos;
+        newPos.x = initPosX + vx * t + 0.5 * c_G.x * tt;
+        newPos.y = initPosY + vy * t + 0.5 * c_G.y * tt;
+        newPos.z = 0;
+        newPos.w = 1;
+        gl_Position = newPos;
+    }
+    else {
+        gl_Position = vec4(-1000, 0, 0, 0); 
+    }
 }
 
 void main()
