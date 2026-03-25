@@ -16,13 +16,47 @@ float random(float n) {
     return fract(sin(n) * 43758.5453123);
 }
 
+float GetRocketY(float time) {
+    float period = 3.0; // 3초 주기
+    float t = mod(time, period) / period; // 0.0 ~ 1.0 반복
+    return -1.0 + (t * 2.0); // -1.0 ~ 1.0 변환
+}
+
+void RocketExhaust() {
+    float lifeTime = 0.5 + a_RV2 * 0.5;
+    float localTime = mod(u_Time + a_RV1 * 10.0, lifeTime);
+    float birthTime = u_Time - localTime;
+    
+    float startY = GetRocketY(birthTime);
+    float startX = 0.0;
+    float t = localTime;
+    
+    float exhaustSpeed = 2.5; 
+    float yPos = startY - (exhaustSpeed * t);
+
+    float freq = 10.0 + a_RV1 * 20.0; // 파티클마다 다른 진동수
+    float amp = t * 0.3; // 아래로 갈수록 진폭 확대 (확산 효과)
+    float spread = (a_RV - 0.5) * 2.0; // 좌우 기본 확산 방향
+    
+    float xPos = (spread * t * 0.5) + (amp * sin(t * freq * c_PI));
+
+    vec4 newPos;
+    float sizeFade = 1.0 - (t / lifeTime);
+    newPos.x = (a_Position.x * sizeFade) + xPos; 
+    newPos.y = (a_Position.y * sizeFade) + yPos;
+    newPos.z = 0.0;
+    newPos.w = 1.0;
+
+    gl_Position = newPos;
+}
+
 void Sin1() {
     float startTime = a_RV1 * 2;
     float newTime = u_Time - startTime;
     
     if (newTime > 0) 
     { 
-        float t = mod(newTime * 2.0, 1.0f);
+        float t = -1.0 + mod(newTime * 2.0, 2.0f); 
         float amp = (1-t) * 0.2 * (a_RV - 0.5) * 2.0;
         float period = a_RV1;
        
@@ -80,5 +114,5 @@ void Falling()
 
 void main()
 {
-    Sin1();
+    RocketExhaust();
 }
