@@ -6,12 +6,28 @@ in vec3 a_Position;
 in float a_Mass;
 in vec2 a_Vel;
 in float a_RV;
+in float a_RV1;
+in float a_RV2; // LifeTime
 
 const float c_PI = 3.141592; 
 const vec2 c_G = vec2(0, -9.8);     // Gravity
 
 float random(float n) {
     return fract(sin(n) * 43758.5453123);
+}
+
+void Sin1() {
+    float amp = 0.2;
+	float t = mod(u_Time * 2, 1.0f);
+
+	vec4 newPosition;
+	newPosition.x = a_Position.x + t;
+	newPosition.y = a_Position.y 
+	    + amp * sin(2.0 * c_PI * t); 
+	newPosition.z = 0;
+	newPosition.w = 1;
+	
+	gl_Position = newPosition;
 }
 
 void Falling()
@@ -25,8 +41,11 @@ void Falling()
     float startTime = random(a_RV);
     float newTime = u_Time - startTime;
     
-    if (newTime > 0) {
-        float t = mod(newTime, 1.0);
+    if (newTime > 0) 
+    {
+        float lifeScale = 2.0;
+        float lifeTime = 0.5 + a_RV2 * lifeScale;
+        float t = lifeTime * fract(newTime / lifeTime); // 0 ~ lifeTime 구간 반복
         float tt = t*t;
         float vx = a_Vel.x;
         float vy = a_Vel.y;
@@ -42,12 +61,13 @@ void Falling()
         newPos.w = 1;
         gl_Position = newPos;
     }
-    else {
+    else 
+    {
         gl_Position = vec4(-1000, 0, 0, 0); 
     }
 }
 
 void main()
 {
-    Falling();
+    Sin1();
 }

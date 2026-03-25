@@ -241,25 +241,33 @@ void Renderer::DrawParticle()
 	int attribMass = glGetAttribLocation(m_ParticleShader, "a_Mass");
 	int attribVel = glGetAttribLocation(m_ParticleShader, "a_Vel");		// 속도
 	int attribRv = glGetAttribLocation(m_ParticleShader, "a_RV");			// Random Value
+	int attribRv1 = glGetAttribLocation(m_ParticleShader, "a_RV1");		// Random Value 1
+	int attribRv2 = glGetAttribLocation(m_ParticleShader, "a_RV2");		// Random Value 2
 	glEnableVertexAttribArray(attribPosition);
 	glEnableVertexAttribArray(attribMass);
 	glEnableVertexAttribArray(attribVel);
 	glEnableVertexAttribArray(attribRv);
+	glEnableVertexAttribArray(attribRv1);
+	glEnableVertexAttribArray(attribRv2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOParticle);
 	
 	// Stride : 7 * sizeof(float) 정점 데이터 크기 (x, y, z, mass, vx, vy, RV)
-	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), 0);
-	glVertexAttribPointer(attribMass, 1, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
-	glVertexAttribPointer(attribVel, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (GLvoid*)(4 * sizeof(float)));
-	glVertexAttribPointer(attribRv, 1, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (GLvoid*)(6 * sizeof(float)));
-
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), 0);
+	glVertexAttribPointer(attribMass, 1, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+	glVertexAttribPointer(attribVel, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (GLvoid*)(4 * sizeof(float)));
+	glVertexAttribPointer(attribRv, 1, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (GLvoid*)(6 * sizeof(float)));
+	glVertexAttribPointer(attribRv1, 1, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (GLvoid*)(7 * sizeof(float)));
+	glVertexAttribPointer(attribRv2, 1, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (GLvoid*)(8 * sizeof(float)));
+	
 	glDrawArrays(GL_TRIANGLES, 0, m_ParticleCount * 6);
 	
 	glDisableVertexAttribArray(attribPosition);
 	glDisableVertexAttribArray(attribMass);
 	glDisableVertexAttribArray(attribVel);
 	glDisableVertexAttribArray(attribRv);
+	glDisableVertexAttribArray(attribRv1);
+	glDisableVertexAttribArray(attribRv2);
 }
 
 void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
@@ -283,21 +291,24 @@ void Renderer::GenParticle(int num)
 		float vy = ((float)rand() / RAND_MAX);
 
 		float rv = (float)rand() / RAND_MAX; // 랜덤 값 (0.0 ~ 1.0)
+		float rv1 = (float)rand() / RAND_MAX; // 랜덤 값 (0.0 ~ 1.0)
+		float rv2 = 3.0;
 
 		float centerX = 0.0f;
 		float centerY = 0.0f;
 
 		float p[] = {
-			centerX - size / 2, centerY - size / 2, 0, mass, vx, vy, rv,
-			centerX + size / 2, centerY - size / 2, 0, mass, vx, vy, rv,
-			centerX + size / 2, centerY + size / 2, 0, mass, vx, vy, rv,
+			centerX - size / 2, centerY - size / 2, 0, mass, vx, vy, rv, rv1, rv2,
+			centerX + size / 2, centerY - size / 2, 0, mass, vx, vy, rv, rv1, rv2,
+			centerX + size / 2, centerY + size / 2, 0, mass, vx, vy, rv, rv1, rv2,
 
-			centerX - size / 2, centerY - size / 2, 0, mass, vx, vy, rv,
-			centerX + size / 2, centerY + size / 2, 0, mass, vx, vy, rv,
-			centerX - size / 2, centerY + size / 2, 0, mass, vx, vy, rv
+			centerX - size / 2, centerY - size / 2, 0, mass, vx, vy, rv, rv1, rv2,
+			centerX + size / 2, centerY + size / 2, 0, mass, vx, vy, rv, rv1, rv2,
+			centerX - size / 2, centerY + size / 2, 0, mass, vx, vy, rv, rv1, rv2
 		};
 
-		for (int j = 0; j < 42; j++) {  // 6 * 7 (x, y, z, mass, vx, vy, rv)
+		int pSize = sizeof(p) / sizeof(float); // p 배열의 요소 개수 계산
+		for (int j = 0; j < pSize; j++) { 
 			particles.push_back(p[j]);
 		}
 	}
