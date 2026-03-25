@@ -17,17 +17,28 @@ float random(float n) {
 }
 
 void Sin1() {
-    float amp = 0.2;
-	float t = mod(u_Time * 2, 1.0f);
-
-	vec4 newPosition;
-	newPosition.x = a_Position.x + t;
-	newPosition.y = a_Position.y 
-	    + amp * sin(2.0 * c_PI * t); 
-	newPosition.z = 0;
-	newPosition.w = 1;
-	
-	gl_Position = newPosition;
+    float startTime = a_RV1 * 2;
+    float newTime = u_Time - startTime;
+    
+    if (newTime > 0) 
+    { 
+        float t = mod(newTime * 2.0, 1.0f);
+        float amp = (1-t) * 0.2 * (a_RV - 0.5) * 2.0;
+        float period = a_RV1;
+       
+	    vec4 newPosition;
+	    newPosition.x = a_Position.x * a_RV2 * 0.2 + t;
+	    newPosition.y = a_Position.y * a_RV2 * 0.2 
+	        + amp * sin(t * 2 * c_PI * period);
+	    newPosition.z = 0;
+	    newPosition.w = 1;
+	    
+	    gl_Position = newPosition;
+    }
+    else 
+    {
+        gl_Position = vec4(-1000, 0, 0, 0); 
+    }
 }
 
 void Falling()
