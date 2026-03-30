@@ -56,16 +56,16 @@ void Renderer::CreateVertexBufferObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 
-	float rectFS[] // x, y, z
+	float rectFS[] // x, y, z, tx, ty : stride 5
 		=
 	{
-		-1.f, -1.f, 0.f, 
-		1.f, 1.f, 0.f, 
-		-1.f, 1.f , 0.f, //Triangle1
+		-1.f, -1.f, 0.f,	0, 1,
+		1.f, 1.f, 0.f,		1, 0,
+		-1.f, 1.f , 0.f,	0, 0,		//Triangle1
 		
-		-1.f, -1.f, 0.f,  
-		1.f, -1.f, 0.f, 
-		1.f, 1.f, 0.f, //Triangle2
+		-1.f, -1.f, 0.f,	0, 1,
+		1.f, -1.f, 0.f,		1, 1,
+		1.f, 1.f, 0.f,		1, 0		//Triangle2
 	};
 
 	glGenBuffers(1, &m_VBOFS);
@@ -335,16 +335,20 @@ void Renderer::DrawFS()
 	glUniform1f(u_Time, g_Time);
 
 	int attribPosition = glGetAttribLocation(shader, "a_Pos");
+	int attribTPos = glGetAttribLocation(shader, "a_TPos");
 	
 	glEnableVertexAttribArray(attribPosition);
+	glEnableVertexAttribArray(attribTPos);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOFS);
 	
-	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
-
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
+	glVertexAttribPointer(attribTPos, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(3 * sizeof(float)));
+	
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisableVertexAttribArray(attribPosition);
+	glDisableVertexAttribArray(attribTPos);
 }
 
 void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
