@@ -25,7 +25,10 @@ void RenderScene(void)
 	// Renderer Test
 	// g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
 	//g_Renderer->DrawParticle();
-	g_Renderer->DrawTriangle(); // 하얀색으로 가득찬 화면 (거대 삼각형 2개)
+	//g_Renderer->DrawTriangle(); 
+	
+	// 하얀색으로 가득찬 화면 (거대 삼각형 2개)
+	g_Renderer->DrawFS();
 
 	glutSwapBuffers();
 }

@@ -17,6 +17,7 @@ public:
 	void DrawSolidRect(float x, float y, float z, float size, float r, float g, float b, float a);
 	void DrawTriangle();
 	void DrawParticle();
+	void DrawFS();
 	
 	void GenParticle(int num);
 
@@ -43,5 +44,9 @@ private:
 	GLuint m_ParticleShader = 0;
 	
 	int m_ParticleCount = 0;
+	
+	// Fragment Shader
+	GLuint m_VBOFS = 0;
+	GLuint m_FSShader = 0;
 };
 

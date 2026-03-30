@@ -24,7 +24,8 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
 	m_TriangleShader = CompileShaders("./Shaders/Triangle.vs", "./Shaders/Triangle.fs");
 	m_ParticleShader = CompileShaders("./Shaders/Triangle.vs", "./Shaders/Triangle.fs");
-
+	m_FSShader = CompileShaders("./Shaders/FS.vs", "./Shaders/FS.fs");
+	
 	//Create VBOs
 	CreateVertexBufferObjects();
 
@@ -43,6 +44,7 @@ bool Renderer::IsInitialized()
 
 void Renderer::CreateVertexBufferObjects()
 {
+	// ----- 정점 데이터 설정 -----
 	float rect[]
 		=
 	{
@@ -54,9 +56,25 @@ void Renderer::CreateVertexBufferObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 
+	float rectFS[] // x, y, z
+		=
+	{
+		-1.f, -1.f, 0.f, 
+		1.f, 1.f, 0.f, 
+		-1.f, 1.f , 0.f, //Triangle1
+		
+		-1.f, -1.f, 0.f,  
+		1.f, -1.f, 0.f, 
+		1.f, 1.f, 0.f, //Triangle2
+	};
+
+	glGenBuffers(1, &m_VBOFS);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOFS);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rectFS), rectFS, GL_STATIC_DRAW);
+	
 	float centerX = 0;
 	float centerY = 0;
-	float size = 2.0f;
+	float size = 0.1f;
 	
 	float triangle[]
 		=
@@ -304,6 +322,29 @@ void Renderer::DrawParticle()
 	glDisableVertexAttribArray(attribRv);
 	glDisableVertexAttribArray(attribRv1);
 	glDisableVertexAttribArray(attribRv2);
+}
+
+void Renderer::DrawFS()
+{
+	//Program select
+	GLuint shader = m_FSShader;
+	glUseProgram(shader);
+
+	int u_Time = glGetUniformLocation(
+		shader, "u_Time");
+	glUniform1f(u_Time, g_Time);
+
+	int attribPosition = glGetAttribLocation(shader, "a_Pos");
+	
+	glEnableVertexAttribArray(attribPosition);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOFS);
+	
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(attribPosition);
 }
 
 void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)

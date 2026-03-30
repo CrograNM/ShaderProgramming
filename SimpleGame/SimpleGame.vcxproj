@@ -175,6 +175,12 @@
     <None Include="Shaders\Triangle.fs" />
     <None Include="Shaders\Triangle.vs" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Shaders\FS.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shaders\FS.vs" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
