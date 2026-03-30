@@ -84,5 +84,6 @@ void Falling()
 
 void main()
 {
-    Sin1();
+    gl_Position = vec4(a_Position, 1);
+    v_Grey = 1.0;
 }

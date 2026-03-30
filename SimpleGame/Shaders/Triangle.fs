@@ -6,5 +6,5 @@ in float v_Grey;
 
 void main()
 {
-	FragColor = vec4(v_Grey);
+	FragColor = vec4(1.0);
 }
