@@ -38,13 +38,11 @@ void Circle() {
     vec2 currentPos = v_TPos.xy;
     float dist = distance(center, currentPos);
 
-    float radius = 0.5;
-    float outlineWidth = 0.01;
-    outlineWidth = outlineWidth / 2;
+    float radius = 0.4;
+    float lineWidth = 0.01;
+    lineWidth = lineWidth / 2;
 
-    if (dist < radius - outlineWidth) {
-        discard;
-    } else if (dist > radius + outlineWidth) {
+    if (dist < radius - lineWidth || dist > radius + lineWidth) {
         discard;
     }
     FragColor = vec4(0.0, 1.0, 1.0, 1.0); // Cyan
