@@ -4,6 +4,8 @@ layout(location=0) out vec4 FragColor;
 in vec2 v_TPos;
 const float c_PI = 3.1415926535897932384626433832795;
 
+uniform float u_Time;
+
 void Simple() {
     vec3 color;
     
@@ -50,15 +52,23 @@ void Circle() {
 void CircleSin() {
     vec2 center = vec2(0.5, 0.5);
     vec2 currentPos = v_TPos.xy;
-    float dist = distance(center, currentPos);
+    float dist = distance(center, currentPos) + u_Time * -0.5;
+    float value = abs(sin(dist * 2 * c_PI * 4));
+    FragColor = vec4(pow(value, 256));
 
-    float lineCount = 5;
-    float lineWidth = 1;
-    lineWidth = 100 / lineWidth;
-    float per = -0.5 * c_PI;
-
-    float grey = pow(abs(sin((dist * 2 * c_PI +per) * lineCount)), lineWidth);
-    FragColor  = vec4(grey);
+    // float radius = 0.4;
+    // if (dist > radius) {
+    //     discard;
+    // }
+    // 
+    // float lineCount = 5;
+    // float lineWidth = 1;
+    // lineWidth = 100 / lineWidth;
+    // float per = -0.5 * c_PI;
+    // 
+    // float grey = pow(abs(sin((dist * 2 * c_PI +per) * lineCount)), lineWidth);
+    // 
+    // FragColor  = vec4(grey);
 }
 void SixAngleStar() {
     
