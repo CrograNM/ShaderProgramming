@@ -47,10 +47,23 @@ void Circle() {
     }
     FragColor = vec4(0.0, 1.0, 1.0, 1.0); // Cyan
 }
+void CircleSin() {
+    vec2 center = vec2(0.5, 0.5);
+    vec2 currentPos = v_TPos.xy;
+    float dist = distance(center, currentPos);
+
+    float lineCount = 5;
+    float lineWidth = 1;
+    lineWidth = 100 / lineWidth;
+    float per = -0.5 * c_PI;
+
+    float grey = pow(abs(sin((dist * 2 * c_PI +per) * lineCount)), lineWidth);
+    FragColor  = vec4(grey);
+}
 void SixAngleStar() {
     
 } 
 void main()
 {
-	Circle();
+	CircleSin();
 }
