@@ -50,10 +50,11 @@ void Circle() {
     FragColor = vec4(0.0, 1.0, 1.0, 1.0); // Cyan
 }
 void CircleSin() {
+    float time = -u_Time * 20;
     vec2 center = vec2(0.5, 0.5);
     vec2 currentPos = v_TPos.xy;
-    float dist = distance(center, currentPos) + u_Time * -0.5;
-    float value = abs(sin(dist * 2 * c_PI * 4));
+    float dist = distance(center, currentPos);
+    float value = abs(sin(dist * 2 * c_PI * 4 + time));
     FragColor = vec4(pow(value, 256));
 
     // float radius = 0.4;
