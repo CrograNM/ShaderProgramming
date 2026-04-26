@@ -26,10 +26,27 @@ void Flag()
 
 void Flame()
 {
+    float amp = 0.4;
+    float speed = 1.0;
+    float newY = 1 - v_Tex.y;
+    float sinInput = newY * c_PI * 2 - u_Time * speed;
+    float sinValue = newY * amp * (((sin(sinInput) + 1) / 2) - 0.5) + 0.5;
 
+    float fWidth = 0.0;
+    float width =  0.5 * mix(fWidth, 1, newY);  
+    float grey = 0;
+
+    if (v_Tex.x < sinValue + width/2 && v_Tex.x > sinValue - width/2) {
+        grey = 1;
+    }
+    else {
+        grey = 0;
+        discard;
+    }
+    FragColor = vec4(grey);
 }
 
 void main()
 {
-    Flag();
+    Flame();
 }
