@@ -326,7 +326,7 @@ void Renderer::DrawParticle()
 
 void Renderer::DrawFS()
 {
-	g_Time += 0.001f;
+	g_Time += 0.1f;
 	
 	//Program select
 	GLuint shader = m_FSShader;
