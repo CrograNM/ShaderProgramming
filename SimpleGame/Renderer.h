@@ -21,6 +21,8 @@ public:
 	
 	void GenParticle(int num);
 
+	GLuint CreatePngTexture(char* filePath, GLuint samplingMethod);
+	
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
 	bool ReadFile(char* filename, std::string *target);
@@ -48,5 +50,11 @@ private:
 	// Fragment Shader
 	GLuint m_VBOFS = 0;
 	GLuint m_FSShader = 0;
+	
+	// Textures
+	GLuint m_RgbTexture = 0;
+	GLuint m_NumTexture[10];
+	GLuint m_NumsTexture = 0;
+	
 };
 

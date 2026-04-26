@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "LoadPng.h"
 
+#include <Assert.h>
 #include <vector>
 #include <ctime>
 
@@ -27,6 +28,15 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_ParticleShader = CompileShaders("./Shaders/Triangle.vs", "./Shaders/Triangle.fs");
 	m_FSShader = CompileShaders("./Shaders/FS.vs", "./Shaders/FS.fs");
 	
+	// Load Textures
+	m_RgbTexture = CreatePngTexture("./Textures/rgb.png", GL_NEAREST);
+	m_NumsTexture = CreatePngTexture("./Textures/numbers.png", GL_NEAREST);
+	for (int i = 0; i < 10; i++)
+	{
+		std::string path = "./Textures/" + std::to_string(i) + ".png";
+		m_NumTexture[i] = CreatePngTexture((char*)path.c_str(), GL_NEAREST);
+	}
+	
 	//Create VBOs
 	CreateVertexBufferObjects();
 
@@ -41,6 +51,32 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 bool Renderer::IsInitialized()
 {
 	return m_Initialized;
+	
+}
+
+GLuint Renderer::CreatePngTexture(char* filePath, GLuint samplingMethod)
+{
+	//Load Png
+	std::vector<unsigned char> image;
+	unsigned width, height;
+	unsigned error = lodepng::decode(image, width, height, filePath);
+	
+	if (error != 0)
+	{
+		std::cout << "PNG image loading failed:" << filePath << std::endl;
+		assert(0);
+	}
+
+	GLuint temp;
+	glGenTextures(1, &temp);
+	glBindTexture(GL_TEXTURE_2D, temp);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
+	GL_UNSIGNED_BYTE, &image[0]);
+	
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, samplingMethod);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, samplingMethod);
+	
+	return temp;
 }
 
 void Renderer::CreateVertexBufferObjects()
