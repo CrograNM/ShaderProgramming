@@ -369,10 +369,17 @@ void Renderer::DrawFS()
 	GLuint shader = m_FSShader;
 	glUseProgram(shader);
 
-	int u_Time = glGetUniformLocation(
-		shader, "u_Time");
+	int u_Time = glGetUniformLocation(shader, 
+		"u_Time");
 	glUniform1f(u_Time, g_Time);
-
+	
+	int uRGBTexture = glGetUniformLocation(shader, 
+		"u_RGBTex");
+	glUniform1i(uRGBTexture, 0); 
+	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_RgbTexture);
+	
 	int attribPosition = glGetAttribLocation(shader, "a_Pos");
 	int attribTPos = glGetAttribLocation(shader, "a_TPos");
 	
