@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "Renderer.h"
+#include "LoadPng.h"
 
 #include <vector>
 #include <ctime>
