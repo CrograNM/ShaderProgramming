@@ -77,6 +77,13 @@ void TextureQ1()
     //FragColor = vec4(ty); // -> y값이 0에서 1로 증가하다가 다시 0으로 감소하는 패턴을 확인 가능
 }
 
+void TextureQ2()
+{
+    float tx = v_Tex.x;
+    float ty = 1 - 2 * abs(v_Tex.y - 0.5);
+    FragColor = texture(u_RGBTex, vec2(tx, ty));
+}
+
 void main()
 {
     //TextureSampling();
