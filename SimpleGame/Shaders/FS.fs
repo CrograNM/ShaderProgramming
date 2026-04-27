@@ -71,12 +71,7 @@ void TextureSampling()
 void TextureQ1() 
 {
     float tx = v_Tex.x;
-    float ty = v_Tex.y * 2;
-    
-    // 이미지가 중간부터는 상하반전 되도록
-    if (ty > 1.0) {
-        ty = 2.0 - ty; // 상하 반전
-    }
+    float ty = 1 - 2 * abs(v_Tex.y - 0.5);
 
     FragColor = texture(u_RGBTex, vec2(tx, ty));
     //FragColor = vec4(ty); // -> y값이 0에서 1로 증가하다가 다시 0으로 감소하는 패턴을 확인 가능
