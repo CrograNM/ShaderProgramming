@@ -64,7 +64,7 @@ void TextureSampling()
 
     vec4 sum = c0 + c1 + c2 + c3 + c4;
     sum = sum / 5.0;
-
+    
     FragColor = sum;
 }
 
