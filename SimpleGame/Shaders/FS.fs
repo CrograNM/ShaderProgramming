@@ -79,13 +79,17 @@ void TextureQ1()
 
 void TextureQ2()
 {
-    float tx = v_Tex.x;
-    float ty = 1 - 2 * abs(v_Tex.y - 0.5);
-    FragColor = texture(u_RGBTex, vec2(tx, ty));
+    float tx = fract(v_Tex.x * 3);  // tx 값이 0에서 1로 증가하는게 반복
+    float ty = v_Tex.y / 3;         // (2/3, 1), (1/3, 2/3), (0, 1/3)
+
+    float offsetX = 0;
+    float offsetY = (2 - floor(v_Tex.x * 3)) / 3;
+
+    FragColor = texture(u_RGBTex, vec2(tx + offsetX, ty + offsetY));
+    //FragColor = vec4(ty);
 }
 
 void main()
 {
-    //TextureSampling();
-    TextureQ1();
+    TextureQ2();
 }
