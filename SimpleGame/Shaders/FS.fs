@@ -70,10 +70,19 @@ void TextureSampling()
 
 void TextureQ1() 
 {
-    FragColor = texture(u_RGBTex, v_Tex);
+    float tx = v_Tex.x;
+    float ty = v_Tex.y * 2;
+    
+    // 이미지가 중간부터는 상하반전 되도록
+    if (ty > 1.0) {
+        ty = 2.0 - ty; // 상하 반전
+    }
+
+    FragColor = texture(u_RGBTex, vec2(tx, ty));
 }
 
 void main()
 {
-    TextureSampling();
+    //TextureSampling();
+    TextureQ1();
 }
