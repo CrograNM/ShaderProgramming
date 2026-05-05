@@ -126,7 +126,7 @@ void Num()
     float tx = v_Tex.x / 5;
     float ty = v_Tex.y / 2;
 
-    int num = 8;
+    int num = index;
     float offsetX = fract(num / 5.0);
     float offsetY = floor(num / 5.0) / 2.0;
 

@@ -6,6 +6,8 @@
 #include <vector>
 #include <ctime>
 
+#include <windows.h>
+
 Renderer::Renderer(int windowSizeX, int windowSizeY)
 {
 	Initialize(windowSizeX, windowSizeY);
@@ -377,7 +379,9 @@ void Renderer::DrawFS()
 	
 	int uInputNum = glGetUniformLocation(shader, 
 		"u_InputNum");
-	glUniform1i(uInputNum, 0);
+	glUniform1i(uInputNum, g_CurrNum);
+	g_CurrNum++;
+	Sleep(500);
 	
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_RgbTexture);
