@@ -10,8 +10,6 @@ Renderer::Renderer(int windowSizeX, int windowSizeY)
 {
 	Initialize(windowSizeX, windowSizeY);
 }
-
-
 Renderer::~Renderer()
 {
 }
@@ -47,12 +45,10 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 		m_Initialized = true;
 	}
 }
-
 bool Renderer::IsInitialized()
 {
 	return m_Initialized;
 }
-
 GLuint Renderer::CreatePngTexture(char* filePath, GLuint samplingMethod)
 {
 	//Load Png
@@ -77,7 +73,6 @@ GLuint Renderer::CreatePngTexture(char* filePath, GLuint samplingMethod)
 	
 	return temp;
 }
-
 void Renderer::CreateVertexBufferObjects()
 {
 	// ----- 정점 데이터 설정 -----
@@ -156,7 +151,6 @@ void Renderer::CreateVertexBufferObjects()
 	// 동기 : 버퍼 데이터가 GPU로 전송되고 나서 리턴
 	// 비동기 : 바로 리턴
 }
-
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
 {
 	//쉐이더 오브젝트 생성
@@ -191,7 +185,6 @@ void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum S
 	// ShaderProgram 에 attach!!
 	glAttachShader(ShaderProgram, ShaderObj);
 }
-
 bool Renderer::ReadFile(char* filename, std::string *target)
 {
 	std::ifstream file(filename);
@@ -208,7 +201,6 @@ bool Renderer::ReadFile(char* filename, std::string *target)
 	}
 	return true;
 }
-
 GLuint Renderer::CompileShaders(char* filenameVS, char* filenameFS)
 {
 	GLuint ShaderProgram = glCreateProgram(); //빈 쉐이더 프로그램 생성
@@ -267,6 +259,8 @@ GLuint Renderer::CompileShaders(char* filenameVS, char* filenameFS)
 	return ShaderProgram;
 }
 
+float g_Time = 0;
+
 void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, float g, float b, float a)
 {
 	float newX, newY;
@@ -290,9 +284,6 @@ void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, flo
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-
-float g_Time = 0;
-
 void Renderer::DrawTriangle()
 {
 	//Program select
@@ -314,7 +305,6 @@ void Renderer::DrawTriangle()
 
 	glDisableVertexAttribArray(attribPosition);
 }
-
 void Renderer::DrawParticle()
 {
 	g_Time += 0.0001f; // 테스트용
@@ -359,7 +349,6 @@ void Renderer::DrawParticle()
 	glDisableVertexAttribArray(attribRv1);
 	glDisableVertexAttribArray(attribRv2);
 }
-
 void Renderer::DrawFS()
 {
 	g_Time += 0.001f;
@@ -401,7 +390,6 @@ void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
 	*newX = x * 2.f / m_WindowSizeX;
 	*newY = y * 2.f / m_WindowSizeY;
 }
-
 void Renderer::GenParticle(int num)
 {
 	m_ParticleCount = num;
