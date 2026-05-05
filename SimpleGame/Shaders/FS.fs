@@ -102,12 +102,15 @@ void TextureQ3()
 
 void TextureQ4()
 {
-    // y = 0~0.5 -> offsetX = 0.5, y = 0.5~1 -> offsetX = 1
-    float offsetX = fract(ceil(v_Tex.y * 2) / 2); 
+    float resolX = 3;
+    float resolY = 3;
+    float shear = 0.5;
+
+    float offsetX = fract(ceil(v_Tex.y * resolY) * shear); 
     float offsetY = 0;
 
-    float tx = fract(v_Tex.x * 2 + offsetX);
-    float ty = fract(v_Tex.y * 2 + offsetY);
+    float tx = fract(v_Tex.x * resolX + offsetX);
+    float ty = fract(v_Tex.y * resolY + offsetY);
 
     vec2 newTex = vec2(tx, ty);
     FragColor = texture(u_RGBTex, newTex);
