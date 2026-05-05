@@ -6,6 +6,8 @@
 #include <vector>
 #include <ctime>
 
+#include <windows.h>
+
 Renderer::Renderer(int windowSizeX, int windowSizeY)
 {
 	Initialize(windowSizeX, windowSizeY);
@@ -349,6 +351,8 @@ void Renderer::DrawParticle()
 	glDisableVertexAttribArray(attribRv1);
 	glDisableVertexAttribArray(attribRv2);
 }
+
+int g_CurrNum = 0;
 void Renderer::DrawFS()
 {
 	g_Time += 0.001f;
@@ -367,7 +371,11 @@ void Renderer::DrawFS()
 	
 	int uCurrNumTexture = glGetUniformLocation(shader, 
 		"u_CurrNumTex");
-	glUniform1i(uCurrNumTexture, 3);
+	glUniform1i(uCurrNumTexture, g_CurrNum + 2);
+	g_CurrNum++;
+	if (g_CurrNum > 9) 
+		g_CurrNum = 0;
+	Sleep(500);
 	
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_RgbTexture);
