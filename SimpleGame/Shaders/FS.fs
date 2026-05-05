@@ -103,7 +103,7 @@ void TextureQ3()
 void TextureQ4()
 {
     // y = 0~0.5 -> offsetX = 0.5, y = 0.5~1 -> offsetX = 1
-    float offsetX = 0.5 + (floor(v_Tex.y * 2) / 2); 
+    float offsetX = fract(ceil(v_Tex.y * 2) / 2); 
     float offsetY = 0;
 
     float tx = fract(v_Tex.x * 2 + offsetX);
