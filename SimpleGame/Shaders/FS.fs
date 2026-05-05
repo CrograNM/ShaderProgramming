@@ -6,6 +6,8 @@ const float c_PI = 3.1415926535897932384626433832795;
 uniform float u_Time;
 uniform sampler2D u_RGBTex;
 uniform sampler2D u_CurrNumTex;
+uniform sampler2D u_NumsTex;
+uniform int u_InputNum;
 
 void Flag()
 {
@@ -119,14 +121,17 @@ void TextureQ4()
 
 void Num()
 {
-    float tx = v_Tex.x;
-    float ty = v_Tex.y;
+    int index = u_InputNum;
 
-    float offsetX = 0;
-    float offsetY = 0;
+    float tx = v_Tex.x / 5;
+    float ty = v_Tex.y / 2;
+
+    int num = 8;
+    float offsetX = fract(num / 5.0);
+    float offsetY = floor(num / 5.0) / 2.0;
 
     vec2 newTex = vec2(tx + offsetX, ty + offsetY);
-    FragColor = texture(u_CurrNumTex, newTex);
+    FragColor = texture(u_NumsTex, newTex);
 }
 
 void main()

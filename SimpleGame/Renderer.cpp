@@ -6,8 +6,6 @@
 #include <vector>
 #include <ctime>
 
-#include <windows.h>
-
 Renderer::Renderer(int windowSizeX, int windowSizeY)
 {
 	Initialize(windowSizeX, windowSizeY);
@@ -371,13 +369,15 @@ void Renderer::DrawFS()
 	
 	int uCurrNumTexture = glGetUniformLocation(shader, 
 		"u_CurrNumTex");
-	glUniform1i(uCurrNumTexture, g_CurrNum + 2);
-	g_CurrNum++;
-	if (g_CurrNum > 9) 
-		g_CurrNum = 0;
-	Sleep(500);
-	// 이 방식은 텍스쳐 Switch가 발생하여 Bind가 많이 일어남. 캐시 효율이 떨어질 수 있음.
-	// 차라리 offset, 범위 방식으로 하나의 텍스쳐에 숫자들을 넣어서 사용하는 방식이 좋음.
+	glUniform1i(uCurrNumTexture, 2);
+	
+	int uNumsTexture = glGetUniformLocation(shader, 
+		"u_NumsTex");
+	glUniform1i(uNumsTexture, 1);
+	
+	int uInputNum = glGetUniformLocation(shader, 
+		"u_InputNum");
+	glUniform1i(uInputNum, 0);
 	
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_RgbTexture);
