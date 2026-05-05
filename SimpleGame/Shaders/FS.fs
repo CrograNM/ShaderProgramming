@@ -121,16 +121,34 @@ void TextureQ4()
 
 void Num()
 {
-    int index = u_InputNum;
+    // 1. 설정
+    int numberToDisplay = 213;   // 출력하고 싶은 전체 숫자
+    int maxDigits = 3;           // 표시할 총 자릿수 (예: 3자리면 000~999)
+    
+    // 2. 현재 픽셀이 몇 번째 자릿수 칸에 있는지 계산
+    // v_Tex.x가 0~1이므로, 3을 곱하고 floor를 취하면 0, 1, 2번 칸이 나옵니다.
+    float digitIndex = floor(v_Tex.x * float(maxDigits)); 
+    
+    // 3. 해당 칸에서 사용할 개별적인 0~1 범위의 좌표 (fract 이용)
+    float localTx = fract(v_Tex.x * float(maxDigits));
+    
+    // 4. 표시할 숫자에서 현재 자릿수의 구체적인 숫자(0~9) 추출
+    // 예: 213에서 0번 칸(백의 자리)이면 2, 1번 칸(십의 자리)이면 1...
+    // 오른쪽부터 계산하는 것이 수학적으로 편하므로 뺀 값을 사용합니다.
+    float powerOfTen = pow(10.0, float(maxDigits) - 1.0 - digitIndex);
+    int currentDigit = int(mod(float(numberToDisplay) / powerOfTen, 10.0));
 
-    float tx = v_Tex.x / 5;
-    float ty = v_Tex.y / 2;
+    // 5. 텍스처 시트(5x2)에서 해당 숫자의 위치 계산
+    float tx = localTx / 5.0;
+    float ty = v_Tex.y / 2.0;
 
-    int num = index;
-    float offsetX = fract(num / 5.0);
-    float offsetY = floor(num / 5.0) / 2.0;
+    // 숫자 시트 배치에 따른 오프셋 (기존 코드 로직 유지)
+    float offsetX = float(int(mod(float(currentDigit), 5.0))) / 5.0;
+    float offsetY = float(int(float(currentDigit) / 5.0)) / 2.0;
 
     vec2 newTex = vec2(tx + offsetX, ty + offsetY);
+    
+    // 6. 출력
     FragColor = texture(u_NumsTex, newTex);
 }
 
