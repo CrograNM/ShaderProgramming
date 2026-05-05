@@ -100,19 +100,20 @@ void TextureQ3()
     FragColor = texture(u_RGBTex, vec2(tx + offsetX, ty + offsetY));
 }
 
-void TextureBrick()
+void TextureQ4()
 {
-    float tx = fract(v_Tex.x * 2) + 0.5;
-    float ty = v_Tex.y * 2;
+    // y = 0~0.5 -> offsetX = 0.5, y = 0.5~1 -> offsetX = 1
+    float offsetX = 0.5 + (floor(v_Tex.y * 2) / 2); 
+    float offsetY = 0;
 
-    if (v_Tex.y > 0.5) {
-        tx = v_Tex.x * 2;
-    }
+    float tx = fract(v_Tex.x * 2 + offsetX);
+    float ty = fract(v_Tex.y * 2 + offsetY);
 
-    FragColor = texture(u_RGBTex, vec2(tx, ty));
+    vec2 newTex = vec2(tx, ty);
+    FragColor = texture(u_RGBTex, newTex);
 }
 
 void main()
 {
-    TextureBrick();
+    TextureQ4();
 }
