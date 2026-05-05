@@ -121,34 +121,36 @@ void TextureQ4()
 
 void Num()
 {
-    // 1. 설정
-    int numberToDisplay = 213;   // 출력하고 싶은 전체 숫자
-    int maxDigits = 3;           // 표시할 총 자릿수 (예: 3자리면 000~999)
-    
+    int numberToDisplay = 1222; // 출력할 숫자
+    if (numberToDisplay < 0) numberToDisplay = abs(numberToDisplay); // 음수 처리
+
+    // 1. 현재 숫자가 몇 자리인지 계산 (가변 자릿수 핵심)
+    // log10(0)은 정의되지 않으므로 0일 때 예외처리가 필요합니다.
+    int numDigits = (numberToDisplay == 0) ? 1 : int(floor(log(float(numberToDisplay)) / log(10.0))) + 1;
+
     // 2. 현재 픽셀이 몇 번째 자릿수 칸에 있는지 계산
-    // v_Tex.x가 0~1이므로, 3을 곱하고 floor를 취하면 0, 1, 2번 칸이 나옵니다.
-    float digitIndex = floor(v_Tex.x * float(maxDigits)); 
+    // v_Tex.x (0~1)를 현재 자릿수만큼 곱합니다.
+    float digitIndex = floor(v_Tex.x * float(numDigits)); 
     
-    // 3. 해당 칸에서 사용할 개별적인 0~1 범위의 좌표 (fract 이용)
-    float localTx = fract(v_Tex.x * float(maxDigits));
+    // 3. 해당 칸 안에서의 로컬 좌표 (0~1)
+    float localTx = fract(v_Tex.x * float(numDigits));
     
     // 4. 표시할 숫자에서 현재 자릿수의 구체적인 숫자(0~9) 추출
-    // 예: 213에서 0번 칸(백의 자리)이면 2, 1번 칸(십의 자리)이면 1...
-    // 오른쪽부터 계산하는 것이 수학적으로 편하므로 뺀 값을 사용합니다.
-    float powerOfTen = pow(10.0, float(maxDigits) - 1.0 - digitIndex);
+    // 왼쪽부터 추출하기 위해 지수 계산
+    float powerOfTen = pow(10.0, float(numDigits) - 1.0 - digitIndex);
     int currentDigit = int(mod(float(numberToDisplay) / powerOfTen, 10.0));
 
-    // 5. 텍스처 시트(5x2)에서 해당 숫자의 위치 계산
+    // 5. 텍스처 시트(5x2) 내 좌표 계산
+    // (이미지 시트가 0~4가 윗줄, 5~9가 아랫줄이라고 가정할 때의 로직)
     float tx = localTx / 5.0;
     float ty = v_Tex.y / 2.0;
 
-    // 숫자 시트 배치에 따른 오프셋 (기존 코드 로직 유지)
-    float offsetX = float(int(mod(float(currentDigit), 5.0))) / 5.0;
-    float offsetY = float(int(float(currentDigit) / 5.0)) / 2.0;
+    float offsetX = float(currentDigit % 5) / 5.0;
+    float offsetY = float(currentDigit / 5) / 2.0;
 
-    vec2 newTex = vec2(tx + offsetX, ty + offsetY);
+    // 만약 숫자가 아래위로 뒤집혀 있다면 1.0 - (offsetY + ty) 등으로 조정 필요
+    vec2 newTex = vec2(tx + offsetX, offsetY + ty);
     
-    // 6. 출력
     FragColor = texture(u_NumsTex, newTex);
 }
 
