@@ -365,6 +365,10 @@ void Renderer::DrawFS()
 		"u_RGBTex");
 	glUniform1i(uRGBTexture, 0); 
 	
+	int uCurrNumTexture = glGetUniformLocation(shader, 
+		"u_CurrNumTex");
+	glUniform1i(uCurrNumTexture, 3);
+	
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_RgbTexture);
 	
