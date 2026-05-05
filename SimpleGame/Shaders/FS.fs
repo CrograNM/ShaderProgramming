@@ -104,7 +104,7 @@ void TextureQ4()
 {
     float resolX = 3;
     float resolY = 3;
-    float shear = 0.5;
+    float shear = 0.5 * u_Time; 
 
     float offsetX = fract(ceil(v_Tex.y * resolY) * shear); 
     float offsetY = 0;
