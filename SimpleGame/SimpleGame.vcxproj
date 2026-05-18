@@ -180,10 +180,10 @@
     <None Include="Shaders\Triangle.vs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Shaders\FS.fs" />
+    <Compile Include="Shaders\Dummy.fs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Shaders\FS.vs" />
+    <Content Include="Shaders\Dummy.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
