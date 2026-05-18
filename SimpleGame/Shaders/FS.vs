@@ -17,6 +17,5 @@ void main()
     vec2 uv;
     uv.x = a_Pos.x * 0.5 + 0.5;
     uv.y = -a_Pos.y * 0.5 + 0.5;
-	v_Tex = uv;
-
+    v_Tex = uv;
 }
